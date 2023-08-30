@@ -1,0 +1,17 @@
+{
+  "name": "mocha-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "test:spy": "mocha test/spy"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.3.8",
+    "mocha": "^10.2.0",
+    "sinon": "^15.2.0"
+  }
+}
