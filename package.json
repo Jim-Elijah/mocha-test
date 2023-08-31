@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "test:spy": "mocha test/spy"
+    "test:spy": "mocha test/spy",
+    "test:stub": "mocha test/stub"
+
   },
   "author": "",
   "license": "ISC",
