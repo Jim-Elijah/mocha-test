@@ -59,17 +59,17 @@ describe('test Util', () => {
         fn2.restore();
         log.restore();
     })
-    it("test fetch", function () {
+    it("test fetch", async function () {
         let fetch = sinon.spy(util, 'fetch')
         const param = {
             url: '',
             method: 'get',
             data: 'hello'
         }
-        util.fetch(param);
-        sinon.assert.calledOnce(fetch);
-        sinon.assert.calledWith(fetch, param)
-        // sinon.assert.call(fetch, param)
+        const res = await util.fetch(param);
+        sinon.assert.calledOnce(fetch); // 调用次数
+        sinon.assert.calledWith(fetch, param) // 参数
+        expect(res).to.equal(param) // 返回值
 
         fetch.restore();
     })

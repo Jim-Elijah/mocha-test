@@ -1,4 +1,8 @@
 class Util {
+    static staticProperty = 'hello sinon'
+    static staticFn() {
+
+    }
     constructor() {
         this.count = 0;
     }
