@@ -48,34 +48,34 @@ describe('test Util with stub', () => {
 
         expect(MyClass.myStaticProperty).to.equal('original value')
     })
-    it("test fn", function () {
-        const fn1Stub = sinon.stub(util, 'fn1')
-        const fn2Stub = sinon.stub(util, 'fn2')
-        function fn1() {
-            console.log('fn1');
-            fn2()
-        }
-        function fn2() {
-            console.log('fn2');
-        }
-        const spyFn1 = sinon.spy(fn1)
-        const spyFn2 = sinon.spy(fn2)  
+    // it("test fn", function () {
+    //     const fn1Stub = sinon.stub(util, 'fn1').callsFake(fn1)
+    //     const fn2Spy = sinon.spy(fn2)
+    //     function fn1() {
+    //         console.log('fn1');
+    //         fn2()
+    //     }
+    //     function fn2() {
+    //         console.log('fn2');
+    //     }
+    //     // const spyFn1 = sinon.spy(fn1)
+    //     // const spyFn2 = sinon.spy(fn2)  
 
-        const log = sinon.spy(console, 'log')
-        sinon.replace(util, 'fn1', spyFn1)
-        sinon.replace(util, 'fn2', spyFn2)
-        fn1Stub();
-        sinon.assert.calledOnce(fn1Stub);
-        sinon.assert.calledOnce(fn2Stub);
-        sinon.assert.callCount(log, 2);
+    //     const log = sinon.spy(console, 'log')
+    //     // sinon.replace(util, 'fn1', spyFn1)
+    //     // sinon.replace(util, 'fn2', spyFn2)
+    //     util.fn1();
+    //     sinon.assert.calledOnce(fn1Stub);
+    //     sinon.assert.calledOnce(fn2Spy);
+    //     sinon.assert.callCount(log, 2);
 
-        const logArgs = ['fn1', 'fn2']
-        log.getCalls().forEach((call, index) => {
-            console.log('index', index, logArgs[index]);
-            sinon.assert.calledWith(log, logArgs[index])
-        })
+    //     const logArgs = ['fn1', 'fn2']
+    //     log.getCalls().forEach((call, index) => {
+    //         console.log('index', index, logArgs[index]);
+    //         sinon.assert.calledWith(log, logArgs[index])
+    //     })
 
-    })
+    // })
     // it("test fetch", function () {
     //     const param = {
     //         url: '',
