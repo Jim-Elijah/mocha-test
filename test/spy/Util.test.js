@@ -1,5 +1,8 @@
 const sinon = require('sinon')
+const chai = require("chai")
 const Util = require('../../src/Util');
+const common = require('../../src/common')
+
 const { expect } = require('chai');
 
 describe('test Util', () => {
@@ -47,9 +50,9 @@ describe('test Util', () => {
         util.fn1();
         sinon.assert.calledOnce(fn1);
         sinon.assert.calledOnce(fn2);
-        sinon.assert.callCount(log, 2);
+        sinon.assert.callCount(log, 3);
 
-        const logArgs = ['fn1', 'fn2']
+        const logArgs = ['fn1', 'fn2', 'fn1 end']
         log.getCalls().forEach((call, index) => {
             console.log('index', index, logArgs[index]);
             sinon.assert.calledWith(log, logArgs[index])
@@ -58,6 +61,21 @@ describe('test Util', () => {
         fn1.restore();
         fn2.restore();
         log.restore();
+    })
+    it("test fn1 call log", function() {
+        // let fn1 = sinon.spy(util, 'fn1')
+        console.log('common', common);
+        let logSpy = sinon.spy(common, 'log')
+        util.fn1();
+
+        // sinon.assert.calledOnce(fn1)
+        sinon.assert.calledOnce(logSpy)
+        // sinon.assert.callOrder(fn1, logSpy)
+
+        chai.expect(logSpy.getCall(0).args[0]).to.equals('fn1 end')
+
+        // fn1.restore();
+        logSpy.restore();
     })
     it("test fetch", async function () {
         let fetch = sinon.spy(util, 'fetch')

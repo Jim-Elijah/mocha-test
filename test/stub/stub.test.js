@@ -57,6 +57,41 @@ describe('stub usage', () => {
         chai.expect(callback(42)).to.equals(0);
     });
 
+    it("onCall和withArgs结合-stub method", function () {
+        const obj = {
+            fn(a, b) {
+
+            }
+        }
+        const callback = sinon.stub(obj, 'fn');
+        /**
+         * 参数42
+         *     第一次调用，返回1；第二次调用，返回2
+         * 其他情况
+         *     第一次调用，返回111；其他的调用，返回0
+         */
+        callback
+            .withArgs(42)
+            .onFirstCall()
+            .returns(1)
+            .onSecondCall()
+            .returns(2);
+        callback
+            .onFirstCall()
+            .returns(111)
+            .returns(0)
+
+
+        chai.expect(obj.fn(1)).to.equals(111);
+        chai.expect(obj.fn(42)).to.equals(1);
+        chai.expect(obj.fn(42)).to.equals(2);
+        chai.expect(obj.fn(42)).to.equals(0);
+        chai.expect(obj.fn(1)).to.equals(0);
+        chai.expect(obj.fn(42)).to.equals(0);
+        chai.expect(callback.callCount).to.equals(6);
+        console.log('callback.callCount', callback.callCount);
+    });
+
     it("stub对象的方法-callsFake", function () {
         const obj = {
             fn: (a) => { }

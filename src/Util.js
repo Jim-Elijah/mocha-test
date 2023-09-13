@@ -1,3 +1,5 @@
+const common = require('./common')
+
 class Util {
     static staticProperty = 'hello sinon'
     static staticFn() {
@@ -18,9 +20,13 @@ class Util {
     fn1() {
         console.log('fn1');
         this.fn2()
+        common.log('fn1 end')
     }
     fn2() {
         console.log('fn2');
+    }
+    execCommand(cmd, options) {
+        return common.promisifyExec(cmd, options)
     }
 }
 

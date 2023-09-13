@@ -1,5 +1,6 @@
 const sinon = require('sinon')
 const Util = require('../../src/Util');
+const common = require('../../src/common')
 const { expect } = require('chai');
 
 describe('test Util with stub', () => {
@@ -47,6 +48,76 @@ describe('test Util with stub', () => {
         stub.restore();
 
         expect(MyClass.myStaticProperty).to.equal('original value')
+    })
+    it("test fn1", function () {
+        let fn1 = sinon.spy(util, 'fn1')
+        let fn2 = sinon.stub(util, 'fn2')
+        util.fn1();
+        sinon.assert.calledOnce(fn1);
+        sinon.assert.calledOnce(fn2);
+
+        util.fn1();
+        console.log('callCount', fn1.callCount, fn2.callCount);
+
+        fn1.restore();
+        fn2.restore();
+    })
+    it("test execCommand", async function () {
+        let execCommandSpy = sinon.spy(util, 'execCommand')
+        let promisifyExecStub = sinon.stub(common, 'promisifyExec')
+        promisifyExecStub
+            .withArgs('ls')
+            .resolves('a')
+
+        promisifyExecStub.resolves('b')
+
+
+        expect(execCommandSpy).to.deep.equals(util.execCommand)
+        expect(promisifyExecStub).to.deep.equals(common.promisifyExec)
+
+
+        const res1 = await execCommandSpy('ls')
+        expect(res1).to.equals('a')
+        sinon.assert.calledOnce(execCommandSpy);
+        sinon.assert.calledOnce(promisifyExecStub);
+        expect(execCommandSpy.args[0][0]).to.equals('ls')
+        expect(promisifyExecStub.args[0][0]).to.equals('ls')
+
+
+        const res2 = await execCommandSpy('ls -a')
+        expect(res2).to.equals('b')
+        sinon.assert.calledTwice(execCommandSpy);
+        sinon.assert.calledTwice(promisifyExecStub);
+        expect(execCommandSpy.args[1][0]).to.equals('ls -a')
+        expect(promisifyExecStub.args[1][0]).to.equals('ls -a')
+
+        sinon.restore();
+    })
+    it("test execCommand-use original method", async function () {
+        let execCommandSpy = sinon.spy(util, 'execCommand')
+        let promisifyExecStub = sinon.stub(common, 'promisifyExec')
+        promisifyExecStub
+            .withArgs('ls')
+            .resolves('a')
+
+        promisifyExecStub.resolves('b')
+
+        const res1 = await util.execCommand('ls')
+        expect(res1).to.equals('a')
+        sinon.assert.calledOnce(util.execCommand);
+        sinon.assert.calledOnce(common.promisifyExec);
+        expect(util.execCommand.args[0][0]).to.equals('ls')
+        expect(common.promisifyExec.args[0][0]).to.equals('ls')
+
+
+        const res2 = await util.execCommand('ls -a')
+        expect(res2).to.equals('b')
+        sinon.assert.calledTwice(util.execCommand);
+        sinon.assert.calledTwice(common.promisifyExec);
+        expect(util.execCommand.args[1][0]).to.equals('ls -a')
+        expect(common.promisifyExec.args[1][0]).to.equals('ls -a')
+
+        sinon.restore();
     })
     // it("test fn", function () {
     //     const fn1Stub = sinon.stub(util, 'fn1').callsFake(fn1)

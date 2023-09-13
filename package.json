@@ -4,16 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha test/**/*.test.js",
+    "test:hooks": "mocha test/hooks",
     "test:spy": "mocha test/spy",
-    "test:stub": "mocha test/stub"
-
+    "test:stub": "mocha test/stub",
+    "cover": "nyc npm run test"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "chai": "^4.3.8",
     "mocha": "^10.2.0",
+    "nyc": "^15.1.0",
     "sinon": "^15.2.0"
+  },
+  "dependencies": {
+    "axios": "^1.5.0"
   }
 }
