@@ -4,10 +4,18 @@ const Util = require('../../src/Util');
 
 let util;
 describe('test Util', () => {
+    before(() => {
+        console.log('util before');
+    })
+    after(() => {
+        console.log('util after');
+    })
     beforeEach(() => {
+        console.log('util beforeEach');
         util = new Util();
     })
     afterEach(() => {
+        console.log('util afterEach');
         util = null;
     })
     it("test add without step", function () {
@@ -30,5 +38,24 @@ describe('test Util', () => {
         util.add(4);
         sinon.assert.calledOnce(add);
         chai.expect(util.count).to.equals(4)
+    })
+    describe("other", () => {
+        before(() => {
+            console.log('other before');
+        })
+        after(() => {
+            console.log('other after');
+        })
+        beforeEach(() => {
+            console.log('other beforeEach');
+            util = new Util();
+        })
+        afterEach(() => {
+            console.log('other afterEach');
+            util = null;
+        })
+        it("1+1", function() {
+            chai.expect(1+1).to.equals(2)
+        })
     })
 })
