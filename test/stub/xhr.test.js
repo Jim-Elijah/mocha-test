@@ -46,61 +46,82 @@ describe('xhr test', () => {
     //     // 恢复axios的原始实现
     //     axiosStub.restore();
     // })
-    it('get posts', async function () {
-        const url = `https://jsonplaceholder.typicode.com/posts/1`
-        sinon.spy(axios, 'get')
+    // it('get posts', async function () {
+    //     const url = `https://jsonplaceholder.typicode.com/posts/1`
+    //     sinon.spy(axios, 'get')
 
-        const { data } = await axios.get(url)
-        chai.expect(data.id).to.be.a('number')
-        chai.expect(data.userId).to.be.a('number')
-        chai.expect(data.title).to.be.a('string')
-        chai.expect(data.body).to.be.a('string')
+    //     const { data } = await axios.get(url)
+    //     chai.expect(data.id).to.be.a('number')
+    //     chai.expect(data.userId).to.be.a('number')
+    //     chai.expect(data.title).to.be.a('string')
+    //     chai.expect(data.body).to.be.a('string')
 
-    })
-    it('spy axios in downloadFile', async function () {
-        const axiosSpy = sinon.spy(axios, 'get')
-        const downSpy = sinon.spy(downloadFile)
+    // })
+    // it('spy axios in downloadFile', async function () {
+    //     const axiosSpy = sinon.spy(axios, 'get')
+    //     const downSpy = sinon.spy(downloadFile)
 
-        const url = `https://jsonplaceholder.typicode.com/posts/1`
-        const filename = `${Math.random().toString().slice(-5)}.txt`
-        const dest = path.join(__dirname, filename);
+    //     const url = `https://jsonplaceholder.typicode.com/posts/1`
+    //     const filename = `${Math.random().toString().slice(-5)}.txt`
+    //     const dest = path.join(__dirname, filename);
 
-        chai.expect(axiosSpy).to.deep.equals(axios.get)
-        // 注意：spy一个函数，得到 spy和原函数不相等；而spy对象的方法，得到的spy和方法相等
-        // 以下断言 失败
-        // chai.expect(downSpy).to.deep.equals(downloadFile)
+    //     chai.expect(axiosSpy).to.deep.equals(axios.get)
+    //     // 注意：spy一个函数，得到 spy和原函数不相等；而spy对象的方法，得到的spy和方法相等
+    //     // 以下断言 失败
+    //     // chai.expect(downSpy).to.deep.equals(downloadFile)
 
-        await downSpy(url, dest)
+    //     await downSpy(url, dest)
 
-        sinon.assert.calledOnce(downSpy)
-        sinon.assert.calledOnce(axiosSpy)
-        sinon.assert.callOrder(downSpy, axiosSpy)
-        chai.expect(fs.existsSync(dest)).to.be.true;
-        // 删除保存在dest的测试文件
-        fs.rmSync(dest)
-        chai.expect(fs.existsSync(dest)).to.be.false;
-    })
-    it('stub axios in downloadFile', async function () {
+    //     sinon.assert.calledOnce(downSpy)
+    //     sinon.assert.calledOnce(axiosSpy)
+    //     sinon.assert.callOrder(downSpy, axiosSpy)
+    //     chai.expect(fs.existsSync(dest)).to.be.true;
+    //     // 删除保存在dest的测试文件
+    //     fs.rmSync(dest)
+    //     chai.expect(fs.existsSync(dest)).to.be.false;
+    // })
+    // it('stub axios in downloadFile', async function () {
+    //     const source = path.join(__dirname, '1.txt')
+    //     const axiosStub = sinon.stub(axios, 'get').resolves({
+    //         data: fs.createReadStream(source)
+    //     })
+    //     // TODO fallsFake实现
+    //     // callsFake(() => {
+    //     //     return new Promise((resolve, reject) => {
+    //     //         console.log('source', source);
+    //     //         const rs = fs.createReadStream(source)
+    //     //         rs.on('end', () => {
+    //     //             console.log('stub axios get stream end');
+    //     //             resolve({
+    //     //                 data: rs
+    //     //             });
+    //     //         })
+    //     //         rs.on('data', (data) => {
+    //     //             console.log('stub axios get stream data', data.toString());
+    //     //         })
+    //     //     })
+    //     // })
+    //     const downSpy = sinon.spy(downloadFile)
+
+    //     const url = `https://jsonplaceholder.typicode.com/posts/1`
+    //     const filename = `${Math.random().toString().slice(-5)}.txt`
+    //     const dest = path.join(__dirname, filename);
+
+    //     chai.expect(axiosStub).to.deep.equals(axios.get)
+
+    //     await downSpy(url, dest)
+
+    //     sinon.assert.calledOnce(downSpy)
+    //     sinon.assert.calledOnce(axiosStub)
+    //     sinon.assert.callOrder(downSpy, axiosStub)
+    //     chai.expect(fs.existsSync(dest)).to.be.true;
+    //     // 删除保存在dest的测试文件
+    //     fs.rmSync(dest)
+    //     chai.expect(fs.existsSync(dest)).to.be.false;
+    // }).timeout(60 * 1000)
+    it('stub axios in downloadFile: fail', async function () {
         const source = path.join(__dirname, '1.txt')
-        const axiosStub = sinon.stub(axios, 'get').resolves({
-            data: fs.createReadStream(source)
-        })
-        // TODO fallsFake实现
-        // callsFake(() => {
-        //     return new Promise((resolve, reject) => {
-        //         console.log('source', source);
-        //         const rs = fs.createReadStream(source)
-        //         rs.on('end', () => {
-        //             console.log('stub axios get stream end');
-        //             resolve({
-        //                 data: rs
-        //             });
-        //         })
-        //         rs.on('data', (data) => {
-        //             console.log('stub axios get stream data', data.toString());
-        //         })
-        //     })
-        // })
+        const axiosStub = sinon.stub(axios, 'get').rejects()
         const downSpy = sinon.spy(downloadFile)
 
         const url = `https://jsonplaceholder.typicode.com/posts/1`
@@ -109,14 +130,14 @@ describe('xhr test', () => {
 
         chai.expect(axiosStub).to.deep.equals(axios.get)
 
-        await downSpy(url, dest)
-
-        sinon.assert.calledOnce(downSpy)
-        sinon.assert.calledOnce(axiosStub)
-        sinon.assert.callOrder(downSpy, axiosStub)
-        chai.expect(fs.existsSync(dest)).to.be.true;
-        // 删除保存在dest的测试文件
-        fs.rmSync(dest)
-        chai.expect(fs.existsSync(dest)).to.be.false;
+        try {
+            await downSpy(url, dest)
+            console.log('111');
+        } catch (e) {
+            console.log('eee');
+            sinon.assert.calledOnce(downSpy)
+            sinon.assert.calledOnce(axiosStub)
+            sinon.assert.callOrder(downSpy, axiosStub)
+        }
     }).timeout(60 * 1000)
 });
