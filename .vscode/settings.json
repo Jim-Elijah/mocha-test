@@ -1,0 +1,6 @@
+{
+    "ultrarisc-ide.updateConfig": {
+        "interval": 60,
+        "delay": 1
+    }
+}

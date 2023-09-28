@@ -1,4 +1,5 @@
-const common = require('./common')
+const common = require('./common');
+const env = require('./env');
 
 class Util {
     static staticProperty = 'hello sinon'
@@ -27,6 +28,15 @@ class Util {
     }
     execCommand(cmd, options) {
         return common.promisifyExec(cmd, options)
+    }
+    getOS() {
+        console.log('getOS', env.isWin);
+        return env.isWin;
+    }
+    testBus() {
+        const fn = (...args) => { console.log(...args) }
+        common.bus.on('hello', fn)
+        common.bus.emit('hello', 'there')
     }
 }
 

@@ -1,5 +1,6 @@
 const sinon = require('sinon')
 const chai = require("chai")
+const events = require('events')
 const Util = require('../../src/Util');
 const common = require('../../src/common')
 
@@ -9,6 +10,7 @@ describe('test Util', () => {
     let util;
     beforeEach(() => {
         util = new Util();
+        sinon.restore()
     })
     afterEach(() => {
         util = null
@@ -62,7 +64,7 @@ describe('test Util', () => {
         fn2.restore();
         log.restore();
     })
-    it("test fn1 call log", function() {
+    it("test fn1 call log", function () {
         // let fn1 = sinon.spy(util, 'fn1')
         console.log('common', common);
         let logSpy = sinon.spy(common, 'log')
@@ -90,5 +92,39 @@ describe('test Util', () => {
         expect(res).to.equal(param) // 返回值
 
         fetch.restore();
+    })
+    it("busTest: mock bus", function () {
+        let busMock = sinon.mock(common.bus)
+        let busSpy = sinon.spy(util, 'testBus')
+
+        busMock.expects('emit')
+            .once()
+            .withArgs("hello", "there")
+        busMock.expects('on')
+            .once()
+            .withArgs("hello")
+
+        util.testBus();
+
+        sinon.assert.calledOnce(busSpy)
+
+        busMock.verify()
+    })
+    it("busTest: mock EventEmitter", function () {
+        let emiterMock = sinon.mock(events.EventEmitter)
+        let busSpy = sinon.spy(util, 'testBus')
+
+        emiterMock.expects('emit')
+            .once()
+            .withArgs("hello", "there")
+            emiterMock.expects('on')
+            .once()
+            .withArgs("hello")
+
+        util.testBus();
+
+        sinon.assert.calledOnce(busSpy)
+
+        emiterMock.verify()
     })
 });

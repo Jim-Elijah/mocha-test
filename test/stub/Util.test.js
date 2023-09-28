@@ -1,6 +1,7 @@
 const sinon = require('sinon')
 const Util = require('../../src/Util');
 const common = require('../../src/common')
+const env = require("../../src/env")
 const { expect } = require('chai');
 
 describe('test Util with stub', () => {
@@ -10,6 +11,7 @@ describe('test Util with stub', () => {
     })
     afterEach(() => {
         util = null
+        sinon.restore()
     })
     it("test add", function () {
         // 修改原有的add，令其返回10
@@ -163,4 +165,22 @@ describe('test Util with stub', () => {
     //     expect(res).to.equal(param)
     //     // fetch.restore();
     // })
+    it("test getOS", function() {
+        let isWinStub = sinon.stub(env, 'isWin').value("linux")
+        let getOSSpy = sinon.spy(util, 'getOS');
+
+        util.getOS()
+
+        sinon.assert.callOrder(getOSSpy);
+        expect(env.isWin).to.equals('linux')
+    })
+    it("decorate log", function() {
+        let originalLog = console.log
+
+        sinon.stub(console, 'log').callsFake((...args) => {
+            originalLog("decorate log", ...args)
+        })
+        console.log('111');
+        sinon.assert.calledOnce(console.log)
+    })
 });
