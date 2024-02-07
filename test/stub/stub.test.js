@@ -156,6 +156,16 @@ describe('stub usage', () => {
         chai.expect(res).to.deep.equals(args);
         sinon.restore();
     });
+    it("yields another example", function () {
+        const callback = sinon.stub();
+        const args = [1, 2, 3]
+        callback.yields(...args)
+        const res = callback(1, 2, function () {
+            return [...arguments]
+        })
+        chai.expect(res).to.deep.equals(args);
+        sinon.restore();
+    });
     it("yieldsTo", function () {
         const obj = {
             ajax({ success, fail }) {
@@ -169,6 +179,58 @@ describe('stub usage', () => {
                 chai.expect(data).to.deep.equals(args);
             }
         })
+        sinon.restore();
+    });
+    it("yield", function () {
+        // const args = [1, 2, 3]
+        // const callback = sinon.stub()
+        // const fn1 = sinon.spy(), fn2 = sinon.spy()
+        // callback(fn1, fn2)
+        // callback.yield(...args)
+        // sinon.assert.calledOnce(fn1)
+        // console.log('fn1', fn1);
+        // sinon.assert.calledWith(fn1, args)
+        // // sinon.assert.calledOnce(fn2)
+        // // sinon.assert.calledWith(fn2, args)
+        // sinon.restore();
+
+        // 创建一个存根函数
+        //     const myFunction = sinon.stub();
+
+        //    const spy = sinon.spy()
+        //    const spy1 = sinon.spy()
+
+
+        //     // 调用存根函数，并触发回调函数
+        //     myFunction(spy, spy1);
+
+        //      // 设置存根函数的回调函数
+        //      myFunction.yield('Hello', 'World');
+
+        //      sinon.assert.calledWith(spy, 'Hello', 'World')
+        //      sinon.assert.calledOnce(spy1)
+
+        var f1 = sinon.expectation.create().once();
+        var f2 = sinon.expectation.create().once();
+        var stub = sinon.stub()
+        stub(f1, f2);
+        stub.yield();
+        f1.verify();
+        f2.verify();
+    });
+    it("yieldTo", function () {
+        const obj = {
+            ajax({ success, fail }) {
+
+            }
+        }
+        const args = [1, 2, 3]
+        obj.ajax({
+            success(data) {
+                chai.expect(data).to.deep.equals(args);
+            }
+        })
+        sinon.stub(obj, 'ajax').yieldTo('success', args)
         sinon.restore();
     });
     // it("expectations", function () {
