@@ -7,7 +7,6 @@
     "test": "mocha",
     "test:spy": "mocha test/spy",
     "test:stub": "mocha test/stub"
-
   },
   "author": "",
   "license": "ISC",
